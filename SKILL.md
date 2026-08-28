@@ -1,7 +1,8 @@
 ---
 name: xjtu-notices
-description: Collect and digest new Xi'an Jiaotong Univ notices (OA/dean/QXS college)
+description: 整理西安交大通知 (XJTU notices digest: OA/教务处/钱院/公众号)
 version: 0.1.0
+author: brazion
 license: MIT
 platforms: [macos, linux]
 metadata:
@@ -11,17 +12,13 @@ metadata:
 
 # XJTU Notices (西安交大通知整理)
 
-搜集西安交通大学的新通知并整理成简报。数据由 `scripts/fetch_notices.py` 抓取，你只负责
+搜集西安交通大学的新通知并整理成简报。用户是**钱学森书院少年班 2026 级（数学）本科生**，
+对选课/考试/少年班选拔/讲座类通知最敏感。数据由 `scripts/fetch_notices.py` 抓取，你只负责
 **筛选、摘要、排版**——不要自己去找通知源，不要编造脚本输出里没有的条目。
-
-> **安装后先改这一段**：把下面的身份画像换成使用者自己的情况，直接影响筛选优先级。
-> 示例（替换我）：
-> 用户是**钱学森书院少年班 2026 级（数学）本科生**，对选课/考试/少年班选拔/讲座类
-> 通知最敏感。如果是研究生，把高优先级改成：导师/课题组、奖学金、答辩、学术报告。
 
 ## When to Use
 
-- 每日定时的通知早晚报（cron 调用）
+- 每日 7:00 / 22:00 的定时早晚报（cron 调用）
 - 用户问"今天有什么新通知 / 有没有关于 X 的通知"（用 `--all` 或 `--lookback` 调参）
 
 ## Prerequisites
@@ -38,9 +35,6 @@ python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py
 
 # 按需查询：最近 72 小时全部条目（忽略去重，不写 state）
 python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --all --lookback 72 --no-update
-
-# 抓单条通知正文（教务处/钱院有反爬，web_extract 直连会失败，走这个）
-python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --detail "<URL>"
 ```
 
 ## Quick Reference
@@ -49,17 +43,20 @@ python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --detail "<URL>"
 - 条目格式：`[日期][分类] 标题 — URL`；教务处带 `[课程安排]` `[考试安排]` 等分类标签
 - state 在 `~/.hermes/xjtu-notices/state.json`；`--no-update` 预览不写
 - 末尾 `⚠️ 来源异常` 表示某个源抓取失败——如实转告用户，不要假装它没有通知
-- 钱学森学院源 (`bjb.xjtu.edu.cn`) 对其他学院用户可换成自己学院的通知栏目
 
 ## Procedure
 
 1. 用 `terminal` 跑脚本（命令见 How to Run），拿到 Markdown 清单
 2. **筛选**：与用户相关的排前面——
-   - 高：选课/考试/成绩/选拔/推免/奖学金/缴费截止/讲座报告/电脑网络
+   - 高：选课/考试/成绩/少年班与试验班选拔/推免/奖学金/缴费截止/讲座报告/电脑网络
    - 中：后勤停水停电施工、场馆开放、社团活动
    - 低（一句话带过或省略）：教师向通知（招聘/工会/人事）、与本科生无关的公示
 3. **摘要**：标题信息量足够时不必打开详情；对**含截止日期/时间地点**的高优先级条目，
-   用 `--detail` 抓正文（最多抓 5 条，控制耗时）
+   用脚本的 `--detail` 模式抓正文（教务处/钱院有反爬，`web_extract` 会失败）：
+   ```bash
+   python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --detail "<URL>"
+   ```
+   （最多抓 5 条，控制耗时）
 4. **排版**输出（QQ 消息，**详尽模式**——用户明确表示"不嫌啰嗦，尽量翔实"）：
    - 开头总结（"今天 N 条新通知，其中 M 条需要你 action"）
    - 高优先级：逐条展开——标题、发布单位、截止/时间地点（**加粗**）、内容摘要 1-3 句、链接
