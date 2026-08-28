@@ -1,6 +1,6 @@
 ---
 name: xjtu-notices
-description: 整理西安交大通知 (XJTU notices digest: OA/教务处/钱院/公众号)
+description: '整理西安交大通知 (XJTU notices digest: OA/教务处/钱院/公众号)'
 version: 0.1.0
 author: brazion
 license: MIT
