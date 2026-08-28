@@ -1,0 +1,5 @@
+state.json
+feeds_queue.json
+__pycache__/
+*.pyc
+.DS_Store
