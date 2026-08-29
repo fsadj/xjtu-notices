@@ -55,7 +55,9 @@ python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --all --lookback 
    - 中：后勤停水停电施工、场馆开放、社团活动
    - 低（一句话带过或省略）：教师向通知（招聘/工会/人事）、与本科生无关的公示
 3. **摘要**：标题信息量足够时不必打开详情；对**含截止日期/时间地点**的高优先级条目，
-   用脚本的 `--detail` 模式抓正文（教务处/钱院有反爬，`web_extract` 会失败）：
+   **一律用脚本的 `--detail` 模式抓正文**——支持全部四类链接（OA / 教务处 / 钱院 / 公众号
+   mp.weixin 文章）。**不要用 `web_extract`**：教务处/钱院有反爬会直接失败，公众号文章页
+   3MB+ 太重会超时：
    ```bash
    python3 ~/.hermes/skills/xjtu-notices/scripts/fetch_notices.py --detail "<URL>"
    ```
