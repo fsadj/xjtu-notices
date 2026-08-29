@@ -314,6 +314,14 @@ def fetch_detail(url):
         body = page[i:] if i > 0 else page
         body = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>", "", body, flags=re.I)
         return _clean(body)[:4000]
+    if "mp.weixin.qq.com" in url:
+        # 公众号文章: 正文在 id="js_content" 容器 (页面 3MB+, 只取正文段落)
+        m = re.search(r'id="js_content"[^>]*>([\s\S]*?)</div>\s*(?:<div id="js_tags"|<script)', page)
+        body = m.group(1) if m else page
+        body = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>", "", body, flags=re.I)
+        title_m = re.search(r'property="og:title" content="([^"]*)"', page)
+        text = (title_m.group(1) + "\n\n" if title_m else "") + _clean(body)
+        return text[:4000]
     # vsb CMS 正文容器; OA 详情页无此结构, 回退到全文
     m = re.search(r'class="v_news_content"[^>]*>([\s\S]*?)(?:</div>|<div class="footer)', page)
     body = m.group(1) if m else page
